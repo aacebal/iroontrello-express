@@ -10,8 +10,6 @@ const session      = require('express-session');
 const passport     = require('passport');
 const cors         = require('cors');
 
-require('dotenv').config();
-
 require('./config/passport-config');
 
 mongoose.connect('mongodb://localhost/irontrello');
@@ -40,7 +38,11 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(cors());
+
+app.use(cors({
+  credentials: true,
+  origin: [ 'http://localhost:4200' ]
+}));
 
 
 
@@ -53,7 +55,11 @@ app.use('/', myAuthStuff);
 
 const myListStuff = require('./routes/list-api-routes');
 app.use('/', myListStuff);
+
+const myCardStuff = require('./routes/card-api-routes');
+app.use('/', myCardStuff);
 // -----------------------------------------------------------------------------
+
 
 
 // catch 404 and forward to error handler
