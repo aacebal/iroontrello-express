@@ -10,9 +10,11 @@ const session      = require('express-session');
 const passport     = require('passport');
 const cors         = require('cors');
 
+require('dotenv').config();
+
 require('./config/passport-config');
 
-mongoose.connect('mongodb://localhost/irontrello');
+mongoose.connect(process.env.MONGODB_URI);
 
 const app = express();
 
@@ -46,10 +48,9 @@ app.use(cors({
 
 
 
-// ROUTES GO HERE --------------------------------------------------------------
-const index = require('./routes/index');
-app.use('/', index);
+// COMMENT
 
+// ROUTES GO HERE --------------------------------------------------------------
 const myAuthStuff = require('./routes/auth-api-routes');
 app.use('/', myAuthStuff);
 
@@ -59,6 +60,13 @@ app.use('/', myListStuff);
 const myCardStuff = require('./routes/card-api-routes');
 app.use('/', myCardStuff);
 // -----------------------------------------------------------------------------
+
+
+
+// Display the Angular app if no route matches
+app.use((req, res, next) => {
+    res.sendFile(__dirname + '/public/index.html');
+});
 
 
 
